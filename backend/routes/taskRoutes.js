@@ -18,7 +18,22 @@ router.post("/", auth, async (req, res) => {
     const { title, description } = req.body;
     const newTask = new Task({ title, description, userId: req.user.id });
     await newTask.save();
-    res.json(newTask); 
+    res.json(newTask);
+  } catch (err) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+router.patch("/:id", auth, async (req, res) => {
+  try {
+    const { progress } = req.body;
+    const task = await Task.findOneAndUpdate(
+      { _id: req.params.id, userId: req.user.id },
+      { progress },
+      { new: true }
+    );
+    if (!task) return res.status(404).json({ message: "Task not found" });
+    res.json(task);
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }

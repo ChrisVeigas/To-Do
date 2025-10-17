@@ -35,15 +35,35 @@ export function TaskProvider({ children }) {
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
-      
+
       setTasks((prevTasks) => [...prevTasks, data]);
     } catch (err) {
       console.error("Failed to add task", err);
     }
   };
 
+  const updateTask = async (id, progress) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/tasks", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": token,
+        },
+        body: JSON.stringify(progress),
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const updatedTask = await res.json();
+
+      setTasks(prev => prev.map(t => t._id === id ? updatedTask : t));
+    } catch (err) {
+      console.error("Failed to update task", err);
+    }
+  };
+
   return (
-    <TaskContext.Provider value={{ tasks, addTask }}>
+    <TaskContext.Provider value={{ tasks, addTask, updateTask }}>
       {children}
     </TaskContext.Provider>
   );

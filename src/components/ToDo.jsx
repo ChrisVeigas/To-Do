@@ -4,20 +4,59 @@ import {
   CardActions,
   Typography,
   Box,
-  Button,
   List,
   ListItem,
   ListItemText,
+  LinearProgress,
+  Slider,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { useTasks } from "../context/TaskContext";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 function ToDo() {
-
-  const { tasks } = useTasks();
+  const { tasks, setTasks } = useTasks(); // make sure setTasks is exposed in TaskContext
   const MotionLink = motion(Link);
 
+  // Track local progress for all tasks
+  const [taskProgress, setTaskProgress] = useState({});
+
+  useEffect(() => {
+    // Initialize progress from tasks
+    const progressMap = {};
+    tasks.forEach((task) => {
+      progressMap[task._id] = task.progress || 0;
+    });
+    setTaskProgress(progressMap);
+  }, [tasks]);
+
+  // Update progress on backend
+  const updateProgress = async (taskId, newProgress) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-auth-token": localStorage.getItem("token"),
+        },
+        body: JSON.stringify({ progress: newProgress }),
+      });
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const updatedTask = await res.json();
+      setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
+    } catch (err) {
+      console.error("Failed to update task", err);
+    }
+  };
+
+  const handleSliderChange = (taskId, value) => {
+    setTaskProgress((prev) => ({ ...prev, [taskId]: value }));
+  };
+
+  const handleSliderCommit = (taskId, value) => {
+    updateProgress(taskId, value);
+  };
 
   return (
     <Box
@@ -28,10 +67,8 @@ function ToDo() {
         maxWidth: 400,
         margin: "auto",
         marginTop: 10,
-        "&:hover": { boxShadow: 3 },
+        "&:hover": { boxShadow: 5 },
       }}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.9 }}
     >
       <Card sx={{ elevation: 0, backgroundColor: "#E9F1EF", mb: 1 }}>
         <CardContent>
@@ -58,14 +95,57 @@ function ToDo() {
                 No tasks yet. Add one!
               </Typography>
             ) : (
-              tasks.map((task, index) => (
-                <ListItem key={index} sx={{ borderBottom: "1px solid #ccc" }}>
-                  <ListItemText
-                    primary={task.title}
-                    secondary={task.description}
-                  />
-                </ListItem>
-              ))
+              tasks.map((task) => {
+                const progress = taskProgress[task._id] || 0;
+
+                return (
+                  <ListItem
+                    key={task._id}
+                    sx={{
+                      flexDirection: "column",
+                      alignItems: "flex-start",
+                      mb: 2,
+                      p: 2,
+                      borderRadius: 2,
+                      background: `linear-gradient(90deg, rgba(255,0,0,0.2), rgba(0,128,0,0.2))`,
+                    }}
+                  >
+                    <ListItemText
+                      primary={task.title}
+                      secondary={task.description}
+                    />
+
+                    <Box sx={{ width: "100%", mt: 1 }}>
+                      <LinearProgress
+                        variant="determinate"
+                        value={progress}
+                        sx={{
+                          height: 10,
+                          borderRadius: 5,
+                          "& .MuiLinearProgress-bar": {
+                            background: `linear-gradient(to right, #9C2007, #F4830B, #1B9C07)`,
+                            width: `${progress}%`,
+                          },
+                          backgroundColor: "#ccc",
+                        }}
+                      />
+                    </Box>
+
+                    <Slider
+                      value={progress}
+                      onChange={(_, val) => handleSliderChange(task._id, val)}
+                      onChangeCommitted={(_, val) =>
+                        handleSliderCommit(task._id, val)
+                      }
+                      min={0}
+                      max={100}
+                      step={1}
+                      sx={{ width: "100%", mt: 1 }}
+                    />
+                    <Typography variant="caption">{progress}%</Typography>
+                  </ListItem>
+                );
+              })
             )}
           </List>
 
