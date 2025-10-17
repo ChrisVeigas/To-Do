@@ -16,14 +16,12 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 function ToDo() {
-  const { tasks, setTasks } = useTasks(); // make sure setTasks is exposed in TaskContext
+  const { tasks, setTasks } = useTasks(); 
   const MotionLink = motion(Link);
 
-  // Track local progress for all tasks
   const [taskProgress, setTaskProgress] = useState({});
 
   useEffect(() => {
-    // Initialize progress from tasks
     const progressMap = {};
     tasks.forEach((task) => {
       progressMap[task._id] = task.progress || 0;
@@ -31,7 +29,6 @@ function ToDo() {
     setTaskProgress(progressMap);
   }, [tasks]);
 
-  // Update progress on backend
   const updateProgress = async (taskId, newProgress) => {
     try {
       const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
@@ -62,9 +59,9 @@ function ToDo() {
     <Box
       component={motion.div}
       sx={{
-        maxHeight: 500,
+        maxHeight: "auto",
         overflow: "auto",
-        maxWidth: 400,
+        maxWidth: "auto",
         margin: "auto",
         marginTop: 10,
         "&:hover": { boxShadow: 5 },
