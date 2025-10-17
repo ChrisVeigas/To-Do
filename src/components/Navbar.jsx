@@ -5,8 +5,10 @@ import { motion } from "framer-motion";
 function Navbar() {
   const MotionLink = motion(Link);
   const MotionImg = motion("img");
+  const MotionNav = motion("nav");
+
   return (
-    <nav
+    <MotionNav
       className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-[#E9F1EF]/80 backdrop-blur-sm z-50"
       component={motion.div}
       whileHover={{ scale: 1.05 }}
@@ -27,7 +29,7 @@ function Navbar() {
           Home
         </MotionLink>
         <MotionLink
-          to="/connect"
+          to="/register"
           className="text-[#3C5556] hover:text-[#E09789] font-medium bg-slate-5 px-3 py-1 rounded-md shadow-md"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.9 }}
@@ -35,7 +37,7 @@ function Navbar() {
           Sign In/Sign Up
         </MotionLink>
       </div>
-    </nav>
+    </MotionNav>
   );
 }
 
