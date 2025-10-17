@@ -32,9 +32,9 @@ export function TaskProvider({ children }) {
         },
         body: JSON.stringify(task),
       });
-
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const data = await res.json();
+      console.log("Fetched tasks:", data);
 
       setTasks((prevTasks) => [...prevTasks, data]);
     } catch (err) {
@@ -55,15 +55,33 @@ export function TaskProvider({ children }) {
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const updatedTask = await res.json();
+      console.log("Fetched tasks:", updatedTask);
 
-      setTasks(prev => prev.map(t => t._id === id ? updatedTask : t));
+      setTasks((prev) => prev.map((t) => (t._id === id ? updatedTask : t)));
     } catch (err) {
       console.error("Failed to update task", err);
     }
   };
 
+  const deleteTask = async (taskId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
+    } catch (err) {
+      console.error("Failed to delete task", err);
+    }
+  };
+
   return (
-    <TaskContext.Provider value={{ tasks, addTask, updateTask }}>
+    <TaskContext.Provider value={{ tasks, setTasks, addTask, updateTask, deleteTask }}>
       {children}
     </TaskContext.Provider>
   );

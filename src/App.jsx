@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import ToDo from "./components/ToDo";
 import NavBar from "./components/Navbar";
 import AddTask from "./pages/AddTask";
+import DeleteTask from "./pages/DeleteTask";
 import { TaskProvider } from "./context/TaskContext";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
@@ -35,6 +36,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AddTask />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/delete"
+                element={
+                  <PrivateRoute>
+                    <DeleteTask />
                   </PrivateRoute>
                 }
               />

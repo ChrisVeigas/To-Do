@@ -3,6 +3,7 @@ import {
   CardContent,
   CardActions,
   Typography,
+  Button,
   Box,
   List,
   ListItem,
@@ -17,9 +18,10 @@ import { useState, useEffect } from "react";
 import { useUser } from "../context/UserContext";
 
 function ToDo() {
-  const { tasks, setTasks } = useTasks(); 
+  const { tasks, setTasks } = useTasks();
   const { user } = useUser();
   const MotionLink = motion(Link);
+  const MotionButton = motion(Button);
 
   // Local state for slider progress
   const [taskProgress, setTaskProgress] = useState({});
@@ -46,9 +48,7 @@ function ToDo() {
       });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const updatedTask = await res.json();
-      setTasks((prev) =>
-        prev.map((t) => (t._id === taskId ? updatedTask : t))
-      );
+      setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
     } catch (err) {
       console.error("Failed to update task", err);
     }
@@ -60,6 +60,23 @@ function ToDo() {
 
   const handleSliderCommit = (taskId, value) => {
     updateProgress(taskId, value);
+  };
+
+  const deleteTask = async (taskId) => {
+    try {
+      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
+        method: "DELETE",
+        headers: {
+          "x-auth-token": localStorage.getItem("token"),
+        },
+      });
+
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+
+      setTasks((prev) => prev.filter((t) => t._id !== taskId));
+    } catch (err) {
+      console.error("Failed to delete task", err);
+    }
   };
 
   return (
@@ -106,10 +123,11 @@ function ToDo() {
                     sx={{
                       flexDirection: "column",
                       alignItems: "flex-start",
-                      mb: 2,
-                      p: 2,
+                      mb: 0.1,
+                      p: 0.1,
                       borderRadius: 2,
-                      background: "linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,128,0,0.05))",
+                      background:
+                        "linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,128,0,0.05))",
                     }}
                   >
                     <ListItemText
@@ -134,6 +152,22 @@ function ToDo() {
                         }}
                       />
                     </Box>
+
+                    {progress === 100 && (
+                      <MotionButton
+                        type="submit"
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        component={motion.button}
+                        whileHover={{ scale: 1.0 }}
+                        whileTap={{ scale: 0.9 }}
+                        sx={{ mt: 1 }}
+                        onClick={() => deleteTask(task._id)}
+                      >
+                        Delete
+                      </MotionButton>
+                    )}
 
                     <Slider
                       value={progress}

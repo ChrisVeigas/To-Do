@@ -31,7 +31,6 @@ function Register() {
 
   return (
     <Box
-      component={motion.div}
       sx={{
         maxWidth: 400,
         margin: "auto",
@@ -41,8 +40,6 @@ function Register() {
         borderRadius: 2,
         boxShadow: 3,
       }}
-      whileHover={{ scale: 1.0 }}
-      whileTap={{ scale: 0.9 }}
     >
       <Typography
         variant="h4"
