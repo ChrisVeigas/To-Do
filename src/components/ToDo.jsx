@@ -14,13 +14,17 @@ import { motion } from "framer-motion";
 import { useTasks } from "../context/TaskContext";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { useUser } from "../context/UserContext";
 
 function ToDo() {
   const { tasks, setTasks } = useTasks(); 
+  const { user } = useUser();
   const MotionLink = motion(Link);
 
+  // Local state for slider progress
   const [taskProgress, setTaskProgress] = useState({});
 
+  // Initialize progress map whenever tasks change
   useEffect(() => {
     const progressMap = {};
     tasks.forEach((task) => {
@@ -29,6 +33,7 @@ function ToDo() {
     setTaskProgress(progressMap);
   }, [tasks]);
 
+  // Update progress on backend
   const updateProgress = async (taskId, newProgress) => {
     try {
       const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
@@ -41,7 +46,9 @@ function ToDo() {
       });
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const updatedTask = await res.json();
-      setTasks((prev) => prev.map((t) => (t._id === taskId ? updatedTask : t)));
+      setTasks((prev) =>
+        prev.map((t) => (t._id === taskId ? updatedTask : t))
+      );
     } catch (err) {
       console.error("Failed to update task", err);
     }
@@ -59,9 +66,7 @@ function ToDo() {
     <Box
       component={motion.div}
       sx={{
-        maxHeight: "auto",
-        overflow: "auto",
-        maxWidth: "auto",
+        maxWidth: 450,
         margin: "auto",
         marginTop: 10,
         "&:hover": { boxShadow: 5 },
@@ -75,7 +80,7 @@ function ToDo() {
             color="#3C5556"
             sx={{ fontWeight: "bold", mb: 1 }}
           >
-            To-Do List
+            {user ? `${user.username}'s To-Do List` : "To-Do List"}
           </Typography>
 
           <Typography variant="body2" color="#3C5556" sx={{ mb: 2 }}>
@@ -104,7 +109,7 @@ function ToDo() {
                       mb: 2,
                       p: 2,
                       borderRadius: 2,
-                      background: `linear-gradient(90deg, rgba(255,0,0,0.2), rgba(0,128,0,0.2))`,
+                      background: "linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,128,0,0.05))",
                     }}
                   >
                     <ListItemText
@@ -119,11 +124,13 @@ function ToDo() {
                         sx={{
                           height: 10,
                           borderRadius: 5,
-                          "& .MuiLinearProgress-bar": {
-                            background: `linear-gradient(to right, #9C2007, #F4830B, #1B9C07)`,
-                            width: `${progress}%`,
-                          },
                           backgroundColor: "#ccc",
+                          "& .MuiLinearProgress-bar": {
+                            background: `linear-gradient(to right, 
+                              #9C2007 0%, 
+                              #F4830B 50%, 
+                              #1B9C07 100%)`,
+                          },
                         }}
                       />
                     </Box>
