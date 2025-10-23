@@ -123,8 +123,8 @@ function ToDo() {
                     sx={{
                       flexDirection: "column",
                       alignItems: "flex-start",
-                      mb: 0.1,
-                      p: 0.1,
+                      mb: 0.5,
+                      p: 2,
                       borderRadius: 2,
                       background:
                         "linear-gradient(90deg, rgba(255,0,0,0.05), rgba(0,128,0,0.05))",
@@ -134,6 +134,24 @@ function ToDo() {
                       primary={task.title}
                       secondary={task.description}
                     />
+
+                    <Box
+                      sx={{
+                        width: "100%",
+                        display: "flex",
+                        justifyContent: "flex-end",
+                        mb: 1,
+                      }}
+                    >
+                      <MotionLink
+                        to={`/edit/${task._id}`}
+                        className="text-[#70056B] hover:text-[#70056B] font-medium bg-[#eee6ee] px-3 py-1 rounded-md shadow-md"
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                      >
+                        Edit
+                      </MotionLink>
+                    </Box>
 
                     <Box sx={{ width: "100%", mt: 1 }}>
                       <LinearProgress
@@ -145,9 +163,9 @@ function ToDo() {
                           backgroundColor: "#ccc",
                           "& .MuiLinearProgress-bar": {
                             background: `linear-gradient(to right, 
-                              #9C2007 0%, 
-                              #F4830B 50%, 
-                              #1B9C07 100%)`,
+                    #9C2007 0%, 
+                    #F4830B 50%, 
+                    #1B9C07 100%)`,
                           },
                         }}
                       />
@@ -155,7 +173,6 @@ function ToDo() {
 
                     {progress === 100 && (
                       <MotionButton
-                        type="submit"
                         size="small"
                         variant="contained"
                         color="error"
@@ -195,15 +212,6 @@ function ToDo() {
               whileTap={{ scale: 0.9 }}
             >
               Add Task
-            </MotionLink>
-
-            <MotionLink
-              to="/edit"
-              className="text-[#70056B] hover:text-[#70056B] font-medium bg-[#eee6ee] px-3 py-1 rounded-md shadow-md"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              Edit Task
             </MotionLink>
 
             <MotionLink

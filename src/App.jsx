@@ -6,6 +6,7 @@ import DeleteTask from "./pages/DeleteTask";
 import { TaskProvider } from "./context/TaskContext";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import EditTask from "./pages/EditTask";
 import { UserProvider, useUser } from "./context/UserContext";
 
 function PrivateRoute({ children }) {
@@ -36,6 +37,14 @@ function App() {
                 element={
                   <PrivateRoute>
                     <AddTask />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/edit/:id"
+                element={
+                  <PrivateRoute>
+                    <EditTask />
                   </PrivateRoute>
                 }
               />
