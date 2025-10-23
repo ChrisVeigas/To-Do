@@ -23,10 +23,8 @@ function ToDo() {
   const MotionLink = motion.create(Link);
   const MotionButton = motion.create(Button);
 
-  // Local state for slider progress
   const [taskProgress, setTaskProgress] = useState({});
 
-  // Initialize progress map whenever tasks change
   useEffect(() => {
     const progressMap = {};
     tasks.forEach((task) => {
@@ -35,7 +33,6 @@ function ToDo() {
     setTaskProgress(progressMap);
   }, [tasks]);
 
-  // Update progress on backend
   const updateProgress = async (taskId, newProgress) => {
     try {
       const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
