@@ -3,9 +3,9 @@ import logo from "../assets/to-do-list.png";
 import { motion } from "framer-motion";
 
 function Navbar() {
-  const MotionLink = motion(Link);
-  const MotionImg = motion("img");
-  const MotionNav = motion("nav");
+  const MotionLink = motion.create(Link);
+  const MotionImg = motion.create("img");
+  const MotionNav = motion.create("nav");
 
   return (
     <MotionNav

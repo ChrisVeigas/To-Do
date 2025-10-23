@@ -20,8 +20,8 @@ import { useUser } from "../context/UserContext";
 function ToDo() {
   const { tasks, setTasks } = useTasks();
   const { user } = useUser();
-  const MotionLink = motion(Link);
-  const MotionButton = motion(Button);
+  const MotionLink = motion.create(Link);
+  const MotionButton = motion.create(Button);
 
   // Local state for slider progress
   const [taskProgress, setTaskProgress] = useState({});
