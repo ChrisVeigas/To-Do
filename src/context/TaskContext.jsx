@@ -10,7 +10,6 @@ export function TaskProvider({ children }) {
 
   useEffect(() => {
     if (!token) return;
-
     fetch("http://localhost:5000/api/tasks", {
       headers: { "x-auth-token": token },
     })
