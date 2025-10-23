@@ -53,7 +53,7 @@ function DeleteTask() {
         color="#3C5556"
         sx={{ fontWeight: "bold", mb: 2 }}
       >
-        {user ? `${user.name}'s Delete Tasks` : "Delete Tasks"}
+        {user ? `${user.username}'s Delete Tasks` : "Delete Tasks"}
       </Typography>
 
       {tasks.length === 0 ? (
