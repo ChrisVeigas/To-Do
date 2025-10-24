@@ -4,6 +4,7 @@ import { TextField, Button, Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useUser } from "../context/UserContext";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -83,12 +84,16 @@ function Login() {
             "&:hover": { backgroundColor: "#2C4445" },
             mt: 2,
           }}
-          component={motion.button}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.9 }}
         >
           Login
         </Button>
+
+        <p className="text-sm text-gray-600 p-1">
+          Don't have an account?{" "}
+          <Link to="/register" className="text-purple-700 hover:underline">
+            Register
+          </Link>
+        </p>
       </form>
     </Box>
   );
