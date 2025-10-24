@@ -10,9 +10,6 @@ function Navbar() {
   return (
     <MotionNav
       className="fixed top-0 left-0 w-full flex justify-between items-center p-4 bg-[#E9F1EF]/80 backdrop-blur-sm z-50"
-      component={motion.div}
-      whileHover={{ scale: 1.05 }}
-      whileTap={{ scale: 0.95 }}
     >
       <div className="flex items-center gap-2">
         <MotionImg src={logo} alt="To-Do Logo" className="w-8 h-8" whileHover={{scale:1.02}} whileTap={{scale:0.7}}/>

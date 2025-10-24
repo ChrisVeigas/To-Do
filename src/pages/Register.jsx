@@ -89,9 +89,6 @@ function Register() {
             "&:hover": { backgroundColor: "#2C4445" },
             mt: 2,
           }}
-          component={motion.button}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.9 }}
         >
           Register
         </MotionButton>
