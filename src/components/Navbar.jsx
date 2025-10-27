@@ -105,7 +105,7 @@ function Navbar() {
 
                   <button
                     className="w-full text-left p-2 hover:bg-gray-100 rounded-md"
-                    onClick={() => alert("Delete Account coming soon!")}
+                    onClick={() => alert("Delete Account functionality not implemented.")}
                   >
                     Delete Account
                   </button>
