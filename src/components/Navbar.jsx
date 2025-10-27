@@ -34,7 +34,7 @@ function Navbar() {
         {token && (
           <MotionLink
             to="/"
-            className="text-[#3C5556] hover:text-[#E09789] font-medium px-3 py-1 rounded-md shadow-md"
+            className="bg-white text-[#3C5556] hover:text-[#E09789] font-medium px-3 py-1 rounded-md shadow-md"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.9 }}
           >
