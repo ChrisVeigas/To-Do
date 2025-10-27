@@ -9,7 +9,7 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const MotionButton = motion(Button);
+  const MotionButton = motion.create(Button);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

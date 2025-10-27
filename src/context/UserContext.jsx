@@ -23,8 +23,17 @@ export function UserProvider({ children }) {
     localStorage.removeItem("token");
   };
 
+  const updateUser = (newData) => {
+    const updatedUser = {
+      ...user,
+      ...newData,
+    };
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   return (
-    <UserContext.Provider value={{ user, token, login, logout }}>
+    <UserContext.Provider value={{ user, token, login, logout, updateUser }}>
       {children}
     </UserContext.Provider>
   );

@@ -94,12 +94,14 @@ function Navbar() {
                   exit={{ opacity: 0, y: -5 }}
                   className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg p-2 text-[#3C5556]"
                 >
-                  <button
-                    className="w-full text-left p-2 hover:bg-gray-100 rounded-md"
-                    onClick={() => alert("Edit Account feature coming soon!")}
+                  <MotionLink
+                    to="/edit-account"
+                    className="text-[#3C5556] hover:text-[#E09789] font-medium px-3 py-1 rounded-md shadow-md"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                   >
                     Edit Account
-                  </button>
+                  </MotionLink>
 
                   <button
                     className="w-full text-left p-2 hover:bg-gray-100 rounded-md"

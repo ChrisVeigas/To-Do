@@ -9,7 +9,7 @@ router.get("/", auth, async (req, res) => {
     const tasks = await Task.find({ userId: req.user.id });
     res.json(tasks);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -20,7 +20,7 @@ router.post("/", auth, async (req, res) => {
     await newTask.save();
     res.json(newTask);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -35,7 +35,7 @@ router.patch("/:id", auth, async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.json(task);
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -57,7 +57,7 @@ router.put("/:id/edit", auth, async (req, res) => {
     res.json(task);
   } catch (err) {
     console.error("Error editing task:", err);
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 
@@ -70,7 +70,7 @@ router.delete("/:id", auth, async (req, res) => {
     if (!task) return res.status(404).json({ message: "Task not found" });
     res.json({ message: "Task deleted successfully" });
   } catch (err) {
-    res.status(500).json({ message: "Server error" });
+    res.status(500).json({ message: "Internal Server Error" });
   }
 });
 

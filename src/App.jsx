@@ -8,7 +8,8 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import EditTask from "./pages/EditTask";
 import { UserProvider, useUser } from "./context/UserContext";
-import Loader from "./components/Loader"; 
+import Loader from "./components/Loader";
+import EditAccount from "./pages/EditAccount";
 
 function PrivateRoute({ children }) {
   const { token } = useUser();
@@ -16,11 +17,11 @@ function PrivateRoute({ children }) {
 }
 
 function AppContent() {
-  const { loading } = useTasks(); 
+  const { loading } = useTasks();
 
   return (
     <>
-      {loading && <Loader />} 
+      {loading && <Loader />}
 
       <main className="min-h-screen bg-gradient-to-b from-[#AD5389] to-[#3C1053] flex flex-col">
         <NavBar />
@@ -57,6 +58,14 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <DeleteTask />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/edit-account"
+              element={
+                <PrivateRoute>
+                  <EditAccount />
                 </PrivateRoute>
               }
             />
