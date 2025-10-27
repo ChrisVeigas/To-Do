@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Box, Typography } from "@mui/material";
 import { motion } from "framer-motion";
@@ -7,17 +7,33 @@ import { useTasks } from "../context/TaskContext";
 function AddTask() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const { addTask } = useTasks();
+  const { tasks, addTask } = useTasks();
   const navigate = useNavigate();
+  const titleRef = useRef(null);
+
+  useEffect(() => {
+    titleRef.current?.focus();
+  }, []);
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (title.trim() === "") return;
 
+    const duplicate = tasks.some(
+      (task) => task.title.trim().toLowerCase() === title.trim().toLowerCase()
+    );
+
+    if (duplicate) {
+      const confirmAdd = window.confirm(
+        "You already have a task with this title. Do you still want to add it?"
+      );
+      if (!confirmAdd) return;
+    }
+
     addTask({ title, description });
     setTitle("");
     setDescription("");
-    navigate("/"); 
+    navigate("/");
   };
 
   return (
@@ -53,6 +69,7 @@ function AddTask() {
           fullWidth
           value={title}
           onChange={(e) => setTitle(e.target.value)}
+          inputRef={titleRef} 
           sx={{ mb: 2 }}
         />
         <TextField
@@ -66,7 +83,7 @@ function AddTask() {
           sx={{ mb: 2 }}
         />
         <Button
-          component={motion.button} 
+          component={motion.button}
           type="submit"
           fullWidth
           sx={{
