@@ -4,11 +4,11 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { logger } from "../utils/logger";
-import { ZodArray } from "zod/v3";
 
 const registerSchema = z.object({
   username: z.string().min(1, "Username is mandatory"),
-  email: ZodArray
+  email: z
+    .string()
     .min(1, "Email is required")
     .email("Must be a valid email with @"),
   password: z
