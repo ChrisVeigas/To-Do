@@ -1,102 +1,97 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Box,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-} from "@mui/material";
 import { motion } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 import { useTasks } from "../context/TaskContext";
 import { useUser } from "../context/UserContext";
-import { Link } from "react-router-dom";
+import { useDeleteTask } from "../hooks/useDeleteTask";
+import { Button } from "../components/ui/button";
+import { Card, CardHeader, CardContent } from "../components/ui/card";
+import { Trash2, ArrowLeft } from "lucide-react";
 
 function DeleteTask() {
-  const { tasks, setTasks } = useTasks();
+  const { tasks } = useTasks();
   const { user } = useUser();
-  const MotionLink = motion(Link);
-
-  const deleteTask = async (taskId) => {
-    try {
-      const res = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
-        method: "DELETE",
-        headers: {
-          "x-auth-token": localStorage.getItem("token"),
-        },
-      });
-
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      setTasks((prev) => prev.filter((t) => t._id !== taskId));
-    } catch (err) {
-      console.error("Failed to delete task", err);
-    }
-  };
+  const { deleteTask, loading } = useDeleteTask();
+  const navigate = useNavigate();
 
   return (
-    <Box
-      component={motion.div}
-      sx={{
-        maxWidth: 500,
-        margin: "auto",
-        mt: 10,
-        p: 3,
-        backgroundColor: "#E9F1EF",
-        borderRadius: 3,
-        boxShadow: 3,
-      }}
-    >
-      <Typography
-        variant="h5"
-        component="div"
-        color="#3C5556"
-        sx={{ fontWeight: "bold", mb: 2 }}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-b from-[#1E2D2F] to-[#3C5556] px-4 py-10">
+      <motion.h2
+        className="text-3xl font-bold text-[#E9F1EF] mb-8 text-center"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
       >
-        {user ? `${user.username}'s Delete Tasks` : "Delete Tasks"}
-      </Typography>
+        {user ? `${user.username}'s Tasks` : "Delete Tasks"}
+      </motion.h2>
 
-      {tasks.length === 0 ? (
-        <Typography color="#3C5556">No tasks to delete.</Typography>
-      ) : (
-        <List>
-          {tasks.map((task) => (
-            <ListItem
-              key={task._id}
-              sx={{
-                backgroundColor: "#fff",
-                mb: 2,
-                borderRadius: 2,
-                boxShadow: 1,
-                flexDirection: "column",
-                alignItems: "flex-start",
-              }}
-            >
-              <ListItemText primary={task.title} secondary={task.description} />
-              <Button
-                variant="contained"
-                color="error"
-                onClick={() => deleteTask(task._id)}
-                sx={{ mt: 1 }}
+      <div className="w-full max-w-2xl">
+        {tasks.length === 0 ? (
+          <motion.p
+            className="text-center text-gray-300 italic"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+          >
+            No tasks to delete.
+          </motion.p>
+        ) : (
+          <div className="space-y-4">
+            {tasks.map((task, index) => (
+              <Card
+                key={task._id}
+                component={motion.div}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.05 }}
+                className="bg-[#E9F1EF] shadow-md rounded-2xl overflow-hidden border border-[#D1E0DC] hover:shadow-lg transition-all duration-300"
               >
-                Delete
-              </Button>
-            </ListItem>
-          ))}
-        </List>
-      )}
+                <CardHeader className="flex justify-between items-center py-3 bg-[#D1E0DC] px-5">
+                  <h3 className="text-lg font-semibold text-[#2C4445]">
+                    {task.title}
+                  </h3>
+                </CardHeader>
+                <CardContent className="p-5 bg-[#E9F1EF]">
+                  <p className="text-[#3C5556] text-sm whitespace-pre-wrap mb-4">
+                    {task.description}
+                  </p>
+                  <Button
+                    component={motion.button}
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => deleteTask(task._id)}
+                    disabled={loading}
+                    className="flex items-center gap-2 bg-[#70056B] hover:bg-[#590457] text-white"
+                  >
+                    <Trash2 size={16} />
+                    {loading ? "Deleting..." : "Delete"}
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
 
-      <Box sx={{ mt: 2, textAlign: "center" }}>
-        <MotionLink
-          to="/"
-          className="text-[#70056B] hover:text-[#70056B] font-medium bg-[#eee6ee] px-3 py-1 rounded-md shadow-md"
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
+      <motion.div
+        className="flex justify-center mt-10"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3 }}
+      >
+        <Button
+          component={motion.button}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          variant="outline"
+          onClick={() => navigate("/")}
+          className="flex items-center gap-2 text-[#E9F1EF] border-[#E9F1EF] hover:bg-[#2C4445]"
         >
+          <ArrowLeft size={18} />
           Back to To-Do
-        </MotionLink>
-      </Box>
-    </Box>
+        </Button>
+      </motion.div>
+    </div>
   );
 }
 

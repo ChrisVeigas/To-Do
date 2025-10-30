@@ -1,39 +1,36 @@
 /* eslint-disable react-refresh/only-export-components */
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
+import { useUserActions } from "../hooks/useUserActions.js";
 
 const UserContext = createContext();
 
 export function UserProvider({ children }) {
-  const [user, setUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
-  );
-  const [token, setToken] = useState(localStorage.getItem("token") || null);
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-  const login = (userData, jwtToken) => {
-    setUser(userData);
-    setToken(jwtToken);
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("token", jwtToken);
-  };
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
+    if (storedUser && storedToken) {
+      setUser(JSON.parse(storedUser));
+      setToken(storedToken);
+    }
+  }, []);
 
-  const logout = () => {
-    setUser(null);
-    setToken(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-  };
-
-  const updateUser = (newData) => {
-    const updatedUser = {
-      ...user,
-      ...newData,
-    };
-    setUser(updatedUser);
-    localStorage.setItem("user", JSON.stringify(updatedUser));
-  };
+  const { login, logout, updateUser } = useUserActions({ setUser, setToken });
 
   return (
-    <UserContext.Provider value={{ user, token, login, logout, updateUser }}>
+    <UserContext.Provider
+      value={{
+        user,
+        token,
+        setUser,
+        setToken,
+        login,
+        logout,
+        updateUser,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

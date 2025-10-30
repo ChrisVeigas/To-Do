@@ -1,111 +1,89 @@
-import { useState, useEffect } from "react";
-import { TextField, Button, Box, Typography, Card, CardContent } from "@mui/material";
 import { motion } from "framer-motion";
-import { useTasks } from "../context/TaskContext";
-import { useParams, useNavigate } from "react-router-dom";
-
-const MotionBox = motion.create(Box);
-const MotionCard = motion.create(Card);
-const MotionTypography = motion.create(Typography);
-const MotionButton = motion.create(Button);
+import { Card, CardContent } from "../components/ui/card";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Textarea } from "../components/ui/textarea";
+import { useEditTask } from "../hooks/useEditTask";
 
 export default function EditTask() {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { tasks, editTask } = useTasks();
-
-  const existingTask = tasks.find((t) => t._id === id);
-  const [title, setTitle] = useState(existingTask ? existingTask.title : "");
-  const [description, setDescription] = useState(
-    existingTask ? existingTask.description : ""
-  );
-
-  useEffect(() => {
-    if (!existingTask) {
-      console.warn("Task not found in context");
-    }
-  }, [existingTask]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!title.trim() && !description.trim()) return;
-
-    await editTask(id, { title, description });
-    navigate("/"); 
-  };
+  const { title, description, setTitle, setDescription, handleSubmit } =
+    useEditTask();
 
   return (
-    <MotionBox
-      className="flex justify-center items-center min-h-screen bg-gray-100 px-4"
-      initial={{ opacity: 0, y: 15 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4 }}
-    >
-      <MotionCard
-        initial={{ scale: 0.95, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.3 }}
-        className="shadow-xl rounded-2xl w-full max-w-lg bg-white"
+    <div className="flex justify-center items-center min-h-screen bg-linear-to-b from-[#E9F1EF] to-[#CADBD8] px-4">
+      <Card
+        component={motion.div}
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-lg rounded-2xl shadow-xl bg-white"
       >
         <CardContent className="p-8">
-          <MotionTypography
-            variant="h5"
-            className="text-center mb-6 font-semibold"
-            initial={{ y: -10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1, duration: 0.4 }}
+          <motion.h2
+            className="text-2xl font-bold text-center text-[#3C5556] mb-6"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
           >
             ✏️ Edit Task
-          </MotionTypography>
+          </motion.h2>
 
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            className="flex flex-col gap-5"
-          >
-            <TextField
-              label="Title"
-              variant="outlined"
-              fullWidth
-              required
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-            />
-            <TextField
-              label="Description"
-              variant="outlined"
-              multiline
-              minRows={3}
-              fullWidth
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-            />
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Title
+              </label>
+              <Input
+                type="text"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                placeholder="Enter task title"
+                className="focus-visible:ring-[#3C5556]"
+              />
+            </div>
 
-            <Box className="flex justify-end gap-3 pt-2">
-              <MotionButton
-                variant="outlined"
-                color="secondary"
-                onClick={() => navigate("/")}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Description
+              </label>
+              <Textarea
+                rows="4"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter task details"
+                className="focus-visible:ring-[#3C5556]"
+              />
+            </div>
+
+            <div className="flex justify-end gap-3 pt-3">
+              <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Cancel
-              </MotionButton>
+                <Button
+                  variant="outline"
+                  onClick={() => window.history.back()}
+                  className="border-[#3C5556] text-[#3C5556]"
+                >
+                  Cancel
+                </Button>
+              </motion.div>
 
-              <MotionButton
-                variant="contained"
-                color="primary"
-                type="submit"
-                className="bg-blue-600 hover:bg-blue-700"
+              <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
-                Save Changes
-              </MotionButton>
-            </Box>
-          </Box>
+                <Button
+                  type="submit"
+                  className="bg-[#3C5556] hover:bg-[#2C4445] text-white"
+                >
+                  Save Changes
+                </Button>
+              </motion.div>
+            </div>
+          </form>
         </CardContent>
-      </MotionCard>
-    </MotionBox>
+      </Card>
+    </div>
   );
 }
