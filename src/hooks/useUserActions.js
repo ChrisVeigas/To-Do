@@ -12,7 +12,7 @@ export function useUserActions({ setUser, setToken }) {
         localStorage.setItem("user", JSON.stringify(userData));
         localStorage.setItem("token", jwtToken);
 
-        toast.success(`Welcome back, ${userData.name || "User"}!`);
+        toast.success(`Welcome back, ${userData.username || "User"}!`);
         logger.success("User logged in successfully", userData);
       } catch (error) {
         toast.error("Login failed. Please try again.");

@@ -9,7 +9,6 @@ export const useDeleteAccount = () => {
   const { user, setUser } = useUser();
 
   const deleteAccount = async () => {
-    // ✅ Support both "id" and "_id"
     const userId = user?._id || user?.id;
     console.log("🧾 Deleting user with ID:", userId, "User object:", user);
 
@@ -41,7 +40,6 @@ export const useDeleteAccount = () => {
       const data = await res.json();
       if (!res.ok) throw new Error(data.message || "Failed to delete account");
 
-      // ✅ Clear stored user + token
       localStorage.removeItem("token");
       localStorage.removeItem("user");
       setUser(null);

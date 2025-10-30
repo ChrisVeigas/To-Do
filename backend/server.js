@@ -14,11 +14,11 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 mongoose
   .connect(process.env.MONGO_URI)
-  .then(() => console.log("✅ MongoDB Connected"))
+  .then(() => console.log("MongoDB Connected"))
   .catch((err) => console.error("MongoDB Error:", err));
 
 app.use("/api", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
-app.listen(5000, () => console.log("🚀 Server running on port 5000"));
+app.listen(5000, () => console.log("Server running on port 5000"));
