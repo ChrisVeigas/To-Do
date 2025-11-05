@@ -5,6 +5,8 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import taskRoutes from "./routes/taskRoutes.js";
 import userRoutes from "./routes/userRoutes.js"; 
+import adminRoutes from "./routes/adminRoutes.js";
+import adminTasks from "./routes/adminTasks.js";
 
 dotenv.config();
 const app = express();
@@ -20,5 +22,7 @@ mongoose
 app.use("/api", authRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/admin/tasks", adminTasks); 
 
 app.listen(5000, () => console.log("Server running on port 5000"));

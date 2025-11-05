@@ -1,98 +1,108 @@
 import { motion } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-import { useTasks } from "../context/TaskContext";
-import { useUser } from "../context/UserContext";
-import { useDeleteTask } from "../hooks/useDeleteTask";
+import { Card, CardContent } from "../components/ui/card";
 import { Button } from "../components/ui/button";
-import { Card, CardHeader, CardContent } from "../components/ui/card";
-import { Trash2, ArrowLeft } from "lucide-react";
+import { useDeleteTask } from "../hooks/useDeleteTask";
+import { useThemeContext } from "../context/ThemeContext";
+import { useTasks } from "../context/TaskContext";
+import { ArrowLeft } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
-function DeleteTask() {
+export default function DeleteTask() {
+  const { loading, error, deleteAllTasks } = useDeleteTask();
+  const { theme } = useThemeContext();
   const { tasks } = useTasks();
-  const { user } = useUser();
-  const { deleteTask, loading } = useDeleteTask();
   const navigate = useNavigate();
 
+  const cardBg =
+    theme === "light"
+      ? "bg-gradient-to-br from-[#E8F0EE] to-[#D9E4EC] text-[#2F3E46]"
+      : "bg-gradient-to-br from-[#1C1C1C] to-[#2A2A2A] text-gray-100";
+  const btnPrimary =
+    theme === "light"
+      ? "bg-[#3C5556] hover:bg-[#2C4445] text-white"
+      : "bg-gray-700 hover:bg-gray-600 text-white";
+  const btnCancel =
+    theme === "light"
+      ? "border-[#3C5556] text-[#3C5556]"
+      : "border-gray-400 text-gray-300";
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-linear-to-b from-[#1E2D2F] to-[#3C5556] px-4 py-10">
-      <motion.h2
-        className="text-3xl font-bold text-[#E9F1EF] mb-8 text-center"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+      className="flex items-center justify-center px-4 min-h-screen"
+    >
+      <Card
+        component={motion.div}
+        initial={{ scale: 0.9, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
         transition={{ duration: 0.4 }}
+        className={`w-full max-w-md rounded-2xl shadow-xl p-8 ${cardBg}`}
       >
-        {user ? `${user.username}'s Tasks` : "Delete Tasks"}
-      </motion.h2>
-
-      <div className="w-full max-w-2xl">
-        {tasks.length === 0 ? (
-          <motion.p
-            className="text-center text-gray-300 italic"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+        <CardContent className="text-center space-y-6">
+          <motion.h2
+            className="text-2xl font-semibold"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3 }}
           >
-            No tasks to delete.
-          </motion.p>
-        ) : (
-          <div className="space-y-4">
-            {tasks.map((task, index) => (
-              <Card
-                key={task._id}
-                component={motion.div}
-                initial={{ opacity: 0, y: 15 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="bg-[#E9F1EF] shadow-md rounded-2xl overflow-hidden border border-[#D1E0DC] hover:shadow-lg transition-all duration-300"
-              >
-                <CardHeader className="flex justify-between items-center py-3 bg-[#D1E0DC] px-5">
-                  <h3 className="text-lg font-semibold text-[#2C4445]">
-                    {task.title}
-                  </h3>
-                </CardHeader>
-                <CardContent className="p-5 bg-[#E9F1EF]">
-                  <p className="text-[#3C5556] text-sm whitespace-pre-wrap mb-4">
-                    {task.description}
-                  </p>
-                  <Button
-                    component={motion.button}
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => deleteTask(task._id)}
-                    disabled={loading}
-                    className="flex items-center gap-2 bg-[#70056B] hover:bg-[#590457] text-white"
-                  >
-                    <Trash2 size={16} />
-                    {loading ? "Deleting..." : "Delete"}
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        )}
-      </div>
+            Delete All Tasks
+          </motion.h2>
 
-      <motion.div
-        className="flex justify-center mt-10"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3 }}
-      >
-        <Button
-          component={motion.button}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          variant="outline"
-          onClick={() => navigate("/")}
-          className="flex items-center gap-2 text-[#E9F1EF] border-[#E9F1EF] hover:bg-[#2C4445]"
-        >
-          <ArrowLeft size={18} />
-          Back to To-Do
-        </Button>
-      </motion.div>
-    </div>
+          {tasks.length === 0 ? (
+            <p className="text-sm italic opacity-80">No tasks to delete.</p>
+          ) : (
+            <>
+              <p className="text-sm opacity-80">
+                Are you sure you want to delete <b>all your tasks</b>?<br />
+                This action <span className="text-red-500 font-semibold">cannot be undone</span>.
+              </p>
+
+              {error && (
+                <p className="text-red-500 text-sm font-medium">{error}</p>
+              )}
+
+              <div className="flex justify-center gap-3 pt-2">
+                <Button
+                  component={motion.button}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => navigate(-1)}
+                  variant="outline"
+                  className={`${btnCancel}`}
+                >
+                  Cancel
+                </Button>
+
+                <Button
+                  component={motion.button}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  onClick={deleteAllTasks}
+                  disabled={loading}
+                  className={`${btnPrimary}`}
+                >
+                  {loading ? "Deleting..." : "Delete All"}
+                </Button>
+              </div>
+            </>
+          )}
+
+          <div className="pt-4">
+            <Button
+              component={motion.button}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              variant="outline"
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 text-sm mx-auto border-gray-400 text-gray-500 hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              <ArrowLeft size={16} /> Back to To-Do
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
-
-export default DeleteTask;

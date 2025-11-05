@@ -1,31 +1,27 @@
-import { useRef, useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useTasks } from "../context/TaskContext";
 import { toast } from "sonner";
 import { logger } from "../utils/logger";
 
 export function useAddTask() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const { tasks, addTask } = useTasks();
+  const { addTask, tasks } = useTasks();
   const navigate = useNavigate();
-  const titleRef = useRef(null);
 
-  useEffect(() => {
-    titleRef.current?.focus();
-  }, []);
+  const {
+    register,
+    handleSubmit,
+    formState,
+    reset,
+  } = useForm({
+    defaultValues: {
+      title: "",
+      description: "",
+    },
+  });
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (title.trim() === "") {
-      toast.error("Task title required", {
-        description: "Please enter a title before adding a task.",
-        duration: 3000,
-        position: "top-right",
-      });
-      return;
-    }
+  const onSubmit = async (data) => {
+    const { title, description } = data;
 
     const duplicate = tasks.some(
       (task) => task.title.trim().toLowerCase() === title.trim().toLowerCase()
@@ -33,7 +29,7 @@ export function useAddTask() {
 
     if (duplicate) {
       const confirmAdd = window.confirm(
-        "You already have a task with this title. Do you still want to add it?"
+        "A task with this title already exists. Do you still want to add it?"
       );
       if (!confirmAdd) {
         toast.warning("Task not added", {
@@ -54,8 +50,7 @@ export function useAddTask() {
       });
       logger.info("Task added successfully", { title });
 
-      setTitle("");
-      setDescription("");
+      reset(); 
       navigate("/");
     } catch (error) {
       toast.error("Failed to add task", {
@@ -70,11 +65,9 @@ export function useAddTask() {
   };
 
   return {
-    title,
-    setTitle,
-    description,
-    setDescription,
-    titleRef,
+    register,
     handleSubmit,
+    onSubmit,
+    formState,
   };
 }

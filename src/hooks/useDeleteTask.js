@@ -40,5 +40,24 @@ export function useDeleteTask() {
     }
   };
 
-  return { deleteTask, loading };
+  const deleteAllTasks = async () => {
+    setLoading(true);
+    try {
+      await axios.delete("http://localhost:5000/api/tasks", {
+        headers: { "x-auth-token": localStorage.getItem("token") },
+      });
+
+      setTasks([]);
+
+      toast.success("All tasks deleted!");
+      logger.info("All tasks deleted successfully");
+    } catch (error) {
+      toast.error("Failed to delete all tasks");
+      logger.error("All tasks deletion failed", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return { deleteTask, loading, deleteAllTasks };
 }

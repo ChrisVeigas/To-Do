@@ -6,19 +6,40 @@ import { toast } from "sonner";
 import { logger } from "../utils/logger";
 
 const registerSchema = z.object({
-  username: z.string().min(1, "Username is mandatory"),
+  username: z
+    .string()
+    .min(1, "Username is required")
+    .regex(
+      /^[A-Za-z0-9_]+$/,
+      "Username can only contain letters, numbers, and underscores"
+    ),
+
   email: z
     .string()
     .min(1, "Email is required")
-    .email("Must be a valid email with @"),
+    .email("Must be a valid email with @")
+    .refine(
+      (email) =>
+        /@(gmail\.com|hotmail\.com|outlook\.com|yahoo\.com|protonmail\.com)$/i.test(
+          email
+        ),
+      {
+        message:
+          "Only recognized domains are allowed (gmail, hotmail, outlook, yahoo, protonmail)",
+      }
+    )
+    .refine((email) => !/admin/i.test(email), {
+      message: "Email cannot contain the word 'admin'",
+    }),
+
   password: z
     .string()
-    .min(6, "Password must be 6–8 characters")
+    .min(6, "Password is required")
     .max(8, "Password must be 6–8 characters")
     .regex(/[A-Z]/, "Must contain one uppercase letter")
     .regex(/[a-z]/, "Must contain one lowercase letter")
     .regex(/\d/, "Must contain one number")
-    .regex(/[_!&]/, "Must contain one special character (_, !, or &)")
+    .regex(/[_!&]/, "Must contain one special character (_, !, or &)"),
 });
 
 export function useRegisterForm() {
@@ -53,7 +74,8 @@ export function useRegisterForm() {
         navigate("/login");
       } else {
         toast.error("Registration failed", {
-          description: result.message || "Please check your details and try again.",
+          description:
+            result.message || "Please check your details and try again.",
           duration: 3000,
           position: "top-right",
         });

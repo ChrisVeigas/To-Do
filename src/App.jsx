@@ -15,6 +15,7 @@ import { Toaster } from "sonner";
 import { logger } from "./utils/logger";
 import { ThemeProvider, useThemeContext } from "./context/ThemeContext";
 import { useCustomScrollbar } from "./hooks/useScrollbar";
+import AdminDashboard from "./pages/AdminDashboard";
 
 function PrivateRoute({ children }) {
   const { token } = useUser();
@@ -51,7 +52,7 @@ function AppContent() {
             <Route
               path="/"
               element={
-                <PrivateRoute>
+                <PrivateRoute>  
                   <ToDo />
                 </PrivateRoute>
               }
@@ -93,6 +94,14 @@ function AppContent() {
               element={
                 <PrivateRoute>
                   <DeleteAccount />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/admin-dashboard"
+              element={
+                <PrivateRoute>
+                  <AdminDashboard />
                 </PrivateRoute>
               }
             />

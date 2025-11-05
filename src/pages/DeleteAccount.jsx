@@ -20,17 +20,13 @@ export default function DeleteAccount() {
     theme === "light"
       ? "border-[#3C5556] text-[#3C5556]"
       : "border-gray-400 text-gray-300";
-  const bgGradient =
-    theme === "light"
-      ? "bg-gradient-to-b from-[#E9F1EF] via-[#E9F1EF] to-[#E9F1EF]"
-      : "bg-gradient-to-b from-[#0F0F0F] via-[#1A1A1A] to-[#2C2C2C]";
 
   return (
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
-      className={`flex items-center justify-center min-h-screen ${bgGradient} px-4`}
+      className={`flex items-center justify-center px-4`}
     >
       <Card
         component={motion.div}

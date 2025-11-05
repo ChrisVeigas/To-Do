@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export function Tooltip({ label, children }) {
   const [show, setShow] = useState(false);
@@ -11,7 +12,13 @@ export function Tooltip({ label, children }) {
     >
       {children}
       {show && (
-        <div className="absolute bottom-full mb-2 px-2 py-1 text-xs text-white bg-gray-700 rounded-md whitespace-nowrap shadow">
+        <div
+          className={cn(
+            "absolute bottom-full mb-2 px-2 py-1 text-xs rounded-md whitespace-nowrap shadow transition-colors duration-200",
+            "bg-gray-800 text-white",
+            "dark:bg-gray-200 dark:text-gray-900"
+          )}
+        >
           {label}
         </div>
       )}
