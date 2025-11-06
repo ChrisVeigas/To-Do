@@ -31,58 +31,52 @@ export default function AddTask() {
   const labelColor = theme === "light" ? "text-gray-700" : "text-gray-300";
 
   return (
-    <div
-      className={`flex items-center justify-center px-4 min-h-screen transition-colors duration-500`}
+    <Card
+      className={`${cardBg} backdrop-blur-sm rounded-2xl shadow-xl p-6 flex flex-col justify-center transition-colors duration-500 w-full max-w-md`}
     >
-      <Card
-        className={`${cardBg} backdrop-blur-sm rounded-2xl shadow-xl p-6 flex flex-col justify-center transition-colors duration-500 w-full max-w-md`}
-      >
+      <CardHeader className="p-0 text-center">
+        <CardTitle className="text-2xl font-semibold">✏️ Add Task</CardTitle>
+      </CardHeader>
+
+      <CardContent className="p-8">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <CardHeader className="p-0 text-center">
-            <CardTitle className="text-2xl font-semibold">
-              Add New Task
-            </CardTitle>
-          </CardHeader>
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${labelColor}`}>
+              Title
+            </label>
+            <Input
+              type="text"
+              placeholder="Enter task title"
+              {...register("title", { required: "Task title is required" })}
+              className={`${inputFocus}`}
+            />
+            {errors.title && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.title.message}
+              </p>
+            )}
+          </div>
 
-          <CardContent className="p-0 space-y-3">
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${labelColor}`}>
-                Title
-              </label>
-              <Input
-                type="text"
-                placeholder="Enter task title"
-                {...register("title", { required: "Task title is required" })}
-                className={`${inputFocus}`}
-              />
-              {errors.title && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.title.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label className={`block text-sm font-medium mb-1 ${labelColor}`}>
-                Description
-              </label>
-              <textarea
-                placeholder="Enter task details"
-                {...register("description")}
-                className={`w-full px-3 py-2 rounded-md border focus:outline-none ${inputFocus} ${
-                  theme === "light"
-                    ? "border-gray-300 bg-white/80"
-                    : "border-gray-600 bg-[#2C2C2C]"
-                }`}
-                rows="4"
-              />
-              {errors.description && (
-                <p className="text-red-500 text-sm mt-1">
-                  {errors.description.message}
-                </p>
-              )}
-            </div>
-          </CardContent>
+          <div>
+            <label className={`block text-sm font-medium mb-1 ${labelColor}`}>
+              Description
+            </label>
+            <textarea
+              placeholder="Enter task details"
+              {...register("description")}
+              className={`w-full px-3 py-2 rounded-md border focus:outline-none ${inputFocus} ${
+                theme === "light"
+                  ? "border-gray-300 bg-white/80"
+                  : "border-gray-600 bg-[#2C2C2C]"
+              }`}
+              rows="4"
+            />
+            {errors.description && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.description.message}
+              </p>
+            )}
+          </div>
 
           <CardFooter className="p-0 flex flex-col gap-3">
             <Button
@@ -98,7 +92,7 @@ export default function AddTask() {
             </Button>
           </CardFooter>
         </form>
-      </Card>
-    </div>
+      </CardContent>
+    </Card>
   );
 }

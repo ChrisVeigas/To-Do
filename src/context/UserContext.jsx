@@ -7,17 +7,31 @@ const UserContext = createContext();
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("token");
+
     if (storedUser && storedToken) {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
     }
+
+    setLoading(false);
   }, []);
 
   const { login, logout, updateUser } = useUserActions({ setUser, setToken });
+
+  useEffect(() => {
+    if (user && token) {
+      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token", token);
+    } else {
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+    }
+  }, [user, token]);
 
   return (
     <UserContext.Provider
@@ -29,6 +43,7 @@ export function UserProvider({ children }) {
         login,
         logout,
         updateUser,
+        loading,
       }}
     >
       {children}

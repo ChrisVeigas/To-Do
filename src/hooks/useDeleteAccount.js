@@ -16,12 +16,7 @@ export const useDeleteAccount = () => {
       setError("No user found.");
       return;
     }
-
-    const confirmDelete = window.confirm(
-      "Are you sure you want to permanently delete your account?"
-    );
-    if (!confirmDelete) return;
-
+    
     try {
       setLoading(true);
       setError("");

@@ -41,33 +41,51 @@ function ToDo() {
       : "bg-[#ef4444] text-white hover:bg-[#dc2626]";
 
   return (
-    <div className="px-4 transition-colors duration-500">
+    <div
+      className="px-4 pt-24 min-h-[calc(100vh-5rem)]
+             transition-colors duration-500 
+             overflow-y-auto 
+             scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent
+             flex flex-col items-center"
+      style={{ overflowY: tasks.length > 4 ? "auto" : "hidden" }}
+    >
       {tasks.length === 0 ? (
-        <div className="flex flex-col items-center mt-10 space-y-4">
+        <div className="grid place-items-center mt-10 space-y-4">
           <p className={`text-center italic text-sm mt-4 ${labelColor}`}>
             No tasks yet. Add one using the “+” button.
           </p>
         </div>
       ) : (
         <div
-          className="grid gap-8 justify-center px-4 py-8
-            grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4
-            auto-rows-auto place-items-center"
+          className="grid gap-8 justify-center items-start pb-12 px-4
+                     grid-cols-[repeat(auto-fit,minmax(280px,1fr))]
+                     place-items-center w-full max-w-[1400px]"
         >
           {tasks.map((task) => (
             <Card
               key={task._id}
               className={`${cardBg} backdrop-blur-sm rounded-2xl shadow-xl 
-                p-6 flex flex-col justify-between transition-colors duration-500
-                w-full max-w-sm h-[280px] sm:h-[300px]`}
+                          grid grid-rows-[auto_1fr_auto] transition-colors duration-500
+                          p-6 w-full max-w-sm h-[260px] sm:h-[280px]`}
             >
-              <CardHeader className="p-0 text-center h-[50px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
-                <CardTitle className="text-lg font-semibold wrap-break-word">
+              <CardHeader
+                className="p-0 text-left overflow-y-auto scrollbar-thin 
+                           scrollbar-thumb-gray-400 scrollbar-track-transparent 
+                           max-h-14"
+              >
+                <CardTitle
+                  className="text-lg font-semibold leading-tight wrap-break-word"
+                  title={task.title}
+                >
                   {task.title}
                 </CardTitle>
               </CardHeader>
 
-              <CardContent className="p-0 grow overflow-y-auto mt-3 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent">
+              <CardContent
+                className="p-0 mt-3 overflow-y-auto 
+                           scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-transparent
+                           max-h-28"
+              >
                 <p
                   className={`text-sm whitespace-pre-wrap wrap-break-word leading-relaxed ${labelColor}`}
                 >
@@ -75,12 +93,12 @@ function ToDo() {
                 </p>
               </CardContent>
 
-              <div className="flex justify-center gap-3 pt-4">
+              <div className="grid grid-cols-2 gap-3 place-items-center pt-3">
                 <Tooltip label="Edit Task">
                   <Button
                     variant="outline"
                     onClick={() => navigate(`/edit/${task._id}`)}
-                    className={`${btnEdit}`}
+                    className={btnEdit}
                   >
                     <Edit size={16} />
                   </Button>
@@ -89,7 +107,7 @@ function ToDo() {
                 <Tooltip label="Delete Task">
                   <Button
                     onClick={() => deleteTask(task._id)}
-                    className={`${btnDelete}`}
+                    className={btnDelete}
                   >
                     <Trash2 size={16} />
                   </Button>
@@ -100,7 +118,7 @@ function ToDo() {
         </div>
       )}
 
-      <div className="fixed bottom-6 right-6 flex flex-col gap-4 z-50">
+      <div className="fixed bottom-6 right-6 grid gap-4 z-50">
         <Tooltip label="Add Task">
           <Button
             size="lg"

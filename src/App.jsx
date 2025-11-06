@@ -18,7 +18,12 @@ import { useCustomScrollbar } from "./hooks/useScrollbar";
 import AdminDashboard from "./pages/AdminDashboard";
 
 function PrivateRoute({ children }) {
-  const { token } = useUser();
+  const { token, loading } = useUser();
+
+  if (loading) {
+    return <Loader />; 
+  }
+
   return token ? children : <Navigate to="/register" />;
 }
 
@@ -52,7 +57,7 @@ function AppContent() {
             <Route
               path="/"
               element={
-                <PrivateRoute>  
+                <PrivateRoute>
                   <ToDo />
                 </PrivateRoute>
               }
